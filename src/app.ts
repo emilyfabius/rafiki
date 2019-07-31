@@ -137,14 +137,14 @@ export class App {
         const sendIncoming = rulesInstances.length > 0 ? setPipelineReader('incoming', combinedRule, handler) : handler
         endpoint.setIncomingRequestHandler(sendIncoming)
         return wrapperEndpoint
-        }
       }
     }
 
+
     
-    console.log('endpoint', endpoint)
+    // console.log('endpoint', endpoint)
     if (endpoint instanceof PluginEndpoint) {
-      console.log('plugin type******************')
+      // console.log('plugin type******************')
       logger.info('Plugin endpoint connecting')
       await endpoint.connect().catch(() => logger.error('Plugin endpoint failed to connect'))
     }
@@ -157,6 +157,7 @@ export class App {
       await Peer.insertFromInfo(peerInfo, endpointInfo, this._knex)
     }
   }
+
 
   public async removePeer (peerId: string, store: boolean = false) {
     logger.info('Removing peer: ' + peerId, { peerId })
