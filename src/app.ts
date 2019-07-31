@@ -137,15 +137,19 @@ export class App {
         const sendIncoming = rulesInstances.length > 0 ? setPipelineReader('incoming', combinedRule, handler) : handler
         endpoint.setIncomingRequestHandler(sendIncoming)
         return wrapperEndpoint
+        }
       }
     }
 
-    await this.connector.addPeer(peerInfo, wrapperEndpoint)
-
+    
+    console.log('endpoint', endpoint)
     if (endpoint instanceof PluginEndpoint) {
+      console.log('plugin type******************')
       logger.info('Plugin endpoint connecting')
-      endpoint.connect().catch(() => logger.error('Plugin endpoint failed to connect'))
+      await endpoint.connect().catch(() => logger.error('Plugin endpoint failed to connect'))
     }
+
+    await this.connector.addPeer(peerInfo, wrapperEndpoint)
 
     rulesInstances.forEach(rule => rule.startup())
 

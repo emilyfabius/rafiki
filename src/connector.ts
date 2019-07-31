@@ -7,6 +7,7 @@ import { EchoProtocol, IldcpProtocol } from './protocols'
 import { PeerUnreachableError } from 'ilp-packet/dist/src/errors'
 import { log } from './winston'
 import { PeerNotFoundError } from './errors/peer-not-found-error'
+import { PluginEndpoint } from './legacy/plugin-endpoint';
 
 const logger = log.child({ component: 'connector' })
 

@@ -3,10 +3,13 @@
 import * as winston from 'winston'
 import Knex from 'knex'
 import { App } from './app'
+import { Joi } from 'koa-joi-router'
 import { AdminApi } from './services'
 import { SettlementAdminApi } from './services/settlement-admin-api/settlement-admin-api'
 import { Config } from './index'
 import { AuthService } from './services/auth'
+import { PeerInfo } from './types';
+import { EndpointInfo } from './endpoints';
 
 let knex: Knex
 
@@ -88,6 +91,63 @@ export const start = async () => {
   adminApi.listen()
   settlementAdminApi.listen()
   winston.info('🐒 has 🚀. Get ready for 🍌🍌🍌🍌🍌')
+  
+  const p = {
+    id: "alice",
+    assetCode: "USD",
+    assetScale: 2, 
+    relation: "parent",
+    rules: [
+      {
+        "name": "errorHandler"
+      },
+      {
+        "name": "expire"
+      },
+      {
+        "name": "reduceExpiry"
+      },
+      {
+        "name": "validateFulfillment"
+      }
+    ],
+    protocols: [
+      {
+        "name": "ildcp"
+      }
+    ],
+    } as PeerInfo
+
+  const e = {
+    type: "plugin",
+    pluginOpts: {
+      name: 'ilp-plugin-btp',
+      opts: {
+        // listener: {
+        //   port: 9000,
+        //   secret: 'shhh'
+        // } 
+        // servers: {
+        //   listener: {
+        //   port: 9000,
+        //   secret: 'shhh'
+        //   } 
+        // }
+        // await servers.connect()
+    
+        // const client = new BtpPlugin({
+        //   server: 'btp+wss://EmilyTest:shhhh@localhost:7780'
+        // })
+    
+        // await client.connect()
+        // port: 7780,
+        // secret: 'shhh',
+        server: 'btp+wss://EmilyTest:secret@za1.rafikilabs.com/btp'
+      }
+    },
+  } as EndpointInfo
+
+  app.addPeer(p, e, false)
 }
 if (!module.parent) {
   start().catch(e => {
