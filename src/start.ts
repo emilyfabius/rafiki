@@ -123,31 +123,55 @@ export const start = async () => {
     pluginOpts: {
       name: 'ilp-plugin-btp',
       opts: {
-        // listener: {
-        //   port: 9000,
-        //   secret: 'shhh'
-        // } 
-        // servers: {
-        //   listener: {
-        //   port: 9000,
-        //   secret: 'shhh'
-        //   } 
-        // }
-        // await servers.connect()
-    
-        // const client = new BtpPlugin({
-        //   server: 'btp+wss://EmilyTest:shhhh@localhost:7780'
-        // })
-    
-        // await client.connect()
-        // port: 7780,
-        // secret: 'shhh',
         server: 'btp+wss://EmilyTest:secret@za1.rafikilabs.com/btp'
       }
     },
   } as EndpointInfo
 
   app.addPeer(p, e, false)
+
+  const peer1 = {
+    id: "bob",
+    assetCode: "USD",
+    assetScale: 2, 
+    relation: "peer",
+    rules: [
+      {
+        "name": "errorHandler"
+      },
+      {
+        "name": "expire"
+      },
+      {
+        "name": "reduceExpiry"
+      },
+      {
+        "name": "validateFulfillment"
+      }
+    ],
+    protocols: [
+      {
+        "name": "ildcp"
+      }
+    ],
+    } as PeerInfo
+
+  const endpoint1 = {
+    type: "plugin",
+    pluginOpts: {
+      name: 'ilp-plugin-btp',
+      opts: {
+        server: 'btp+wss://EmilyTest:secret@za1.rafikilabs.com/btp'
+      }
+    },
+  } as EndpointInfo
+
+  app.addPeer(peer1, endpoint1, false)
+  console.log("peer added ***********")
+  const token = await authService.getTokenByPeerId('peer1')
+  console.log("token is ", token)
+  // authService.getTokenByPeerId('peer1')
+  // console.log("token is ", authService.getTokenByPeerId('peer1'))
 }
 if (!module.parent) {
   start().catch(e => {
